@@ -11,8 +11,6 @@ echo '##########################################################################
 
 just build-once
 
-# ./ci/build/dev.sh
-
 CT_BIN="${ROOT_DIR}/src/build-debug/bin/ct"
 if [[ ! -x "${CT_BIN}" ]]; then
   echo "error: ${CT_BIN} not found after build"
@@ -82,7 +80,6 @@ metadata = json.loads((trace_dir / "trace_metadata.json").read_text(encoding="ut
 recorder = metadata.get("recorder", {})
 assert recorder.get("name") == "codetracer_python_recorder", recorder
 assert recorder.get("target_script"), "missing target_script in recorder metadata"
-# assert recorder.get("with_diff") is False, "expected with_diff False by default"
 PY
 
 echo '###############################################################################'
