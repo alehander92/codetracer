@@ -1129,6 +1129,11 @@ proc jumpToLocalStep*(self: FlowComponent, path: cstring, line: int, stepCount: 
       # e.g. step list jump for now
       -1
 
+  let activeIteration = if self.loopStates.hasKey(line):
+      self.loopStates[line].activeIteration
+    else:
+      0
+
   self.api.emit(
     CtLocalStepJump,
     LocalStepJump(
@@ -1139,7 +1144,7 @@ proc jumpToLocalStep*(self: FlowComponent, path: cstring, line: int, stepCount: 
       firstLoopLine: firstLoopLine,
       rrTicks: rrTicks,
       reverse: reverse,
-      activeIteration: self.activeIteration
+      activeIteration: activeIteration
     )
   )
   self.api.emit(InternalNewOperation, NewOperation(name: "local step jump", stableBusy: true))
@@ -3958,7 +3963,6 @@ proc updateFlowOnMove*(self: FlowComponent, rrTicks: int, line: int) =
 method onCompleteMove*(self: FlowComponent, response: MoveState) {.async.} =
   self.location = response.location
   # self.updateFlowOnMove(self.location.rrTicks, self.location.line)
-  self.activeIteration = 0
   self.redrawFlow()
 
 method onLoadedFlowShape*(self: Component, update: FlowShape) {.async.} =
